@@ -1,26 +1,22 @@
-# it is the base url pulling the image form the docker repo
-FROM node:14
+# Base image
+FROM node:18
 
-# Setting the working directory in the container to /app
-WORKDIR /app
+# Create app directory
+WORKDIR /usr/src/app
 
-# Copying the package.json and package-lock.json files into the container
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Install the dependencies defined in the package.json file
+# Install app dependencies
 RUN npm install
 
-# Copy the rest of the application code into the container
+# Bundle app source
 COPY . .
 
-# Exposing the port number 3000 to the host
-EXPOSE 3000
-
-# Start the application with the `npm start` command
-CMD [ "npm", "start" ]
-
-# Build the application with the `npm build` command
+# Creates a "dist" folder with the production build
 RUN npm run build
 
-# Stop the application with the `npm stop` command
-#CMD [ "npm", "stop" ] 
+# Start the server using the production build
+CMD [ "node", "dist/main.js" ]
+
+
